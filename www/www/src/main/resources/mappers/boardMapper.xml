@@ -10,7 +10,9 @@
     </insert>
 
     <select id="getList" resultType="com.ezen.www.domain.BoardVO">
-        select * from board order by bno desc
+        select * from board
+        <include refid="search"/>
+        order by bno desc limit #{pageStart}, #{qty}
     </select>
 
     <select id="detail" resultType="com.ezen.www.domain.BoardVO">
@@ -24,5 +26,37 @@
     <delete id="remove">
         delete from board where bno = #{bno}
     </delete>
+
+    <select id="getTotalCount" resultType="int">
+        select count(bno) from board
+        <include refid="search"/>
+    </select>
+
+    <!-- register file part -->
+    <select id="getBno" resultType="long">
+        select max(bno) from board
+    </select>
+
+    <sql id="search">
+        <if test="type != null">
+            <trim prefix="where (" suffix=")" suffixOverrides="or">
+                <foreach collection="typeToArray" item="type">
+                    <trim suffix="or">
+                        <choose>
+                            <when test="type == 't'.toString()">
+                                title like concat('%', #{keyword}, '%')
+                            </when>
+                            <when test="type == 'w'.toString()">
+                                writer like concat('%', #{keyword}, '%')
+                            </when>
+                            <when test="type == 'c'.toString()">
+                                content like concat('%', #{keyword}, '%')
+                            </when>
+                        </choose>
+                    </trim>
+                </foreach>
+            </trim>
+        </if>
+    </sql>
 
 </mapper>

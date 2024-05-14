@@ -4,39 +4,63 @@
     <th:block th:fragment="content">
         <div class="container-sm">
             <h1>Board List Page</h1>
-            <form action="/board/modify" method="post" id="modForm">
-                <div class="mb-3">
-                    <label for="n" class="form-label">bno</label>
-                    <input type="text" class="form-control" name="bno" id="n" th:value="${bvo.bno }" placeholder="bno..." readonly="readonly">
-                </div>
-                <div class="mb-3">
-                    <label for="t" class="form-label">title</label>
-                    <input type="text" class="form-control" name="title" id="t" th:value="${bvo.title }" placeholder="title..." readonly="readonly">
-                </div>
-                <div class="mb-3">
-                    <label for="w" class="form-label">writer</label>
-                    <input type="text" class="form-control" name="writer" id="w" th:value="${bvo.writer }" placeholder="writer..." readonly="readonly">
-                </div>
-                <div class="mb-3">
-                    <label for="c" class="form-label">content</label>
-                    <textarea class="form-control" name="content" id="c" aria-label="With textarea" readonly="readonly">[[${bvo.content }]]</textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="r" class="form-label">regAt</label>
-                    <input type="text" class="form-control" name="regAt" id="r" th:value="${bvo.regAt }" readonly="readonly">
-                </div>
-                <div class="mb-3">
-                    <label for="m" class="form-label">modAt</label>
-                    <input type="text" class="form-control" name="modAt" id="m" th:value="${bvo.modAt }" readonly="readonly">
-                </div>
-                <button type="button" id="listBtn" class="btn btn-outline-primary">List</button>
-                <!--detail page 에서 modify 상태로 변경하기 위한 버튼-->
-                <button type="button" id="modBtn"  class="btn btn-outline-warning">Modify</button>
-                <button type="button" id="delBtn" class="btn btn-outline-danger">Remove</button>
-            </form>
+            <!--th:with로 감싸기-->
+            <th:block th:with="bvo=${bdto.bvo}">
+                <form action="/board/modify" method="post" id="modForm">
+                    <div class="mb-3">
+                        <label for="n" class="form-label">bno</label>
+                        <input type="text" class="form-control" name="bno" id="n" th:value="${bvo.bno }" placeholder="bno..." readonly="readonly">
+                    </div>
+                    <div class="mb-3">
+                        <label for="t" class="form-label">title</label>
+                        <input type="text" class="form-control" name="title" id="t" th:value="${bvo.title }" placeholder="title..." readonly="readonly">
+                    </div>
+                    <div class="mb-3">
+                        <label for="w" class="form-label">writer</label>
+                        <input type="text" class="form-control" name="writer" id="w" th:value="${bvo.writer }" placeholder="writer..." readonly="readonly">
+                    </div>
+                    <div class="mb-3">
+                        <label for="c" class="form-label">content</label>
+                        <textarea class="form-control" name="content" id="c" aria-label="With textarea" readonly="readonly">[[${bvo.content }]]</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="r" class="form-label">regAt</label>
+                        <input type="text" class="form-control" name="regAt" id="r" th:value="${bvo.regAt }" readonly="readonly">
+                    </div>
+                    <div class="mb-3">
+                        <label for="m" class="form-label">modAt</label>
+                        <input type="text" class="form-control" name="modAt" id="m" th:value="${bvo.modAt }" readonly="readonly">
+                    </div>
+
+                    <!-- 파일 업로드 표시 부분 -->
+                    <div class="mb-3">
+                        <ul class="list-group list-group-flush">
+                            <li th:each="fvo : ${bdto.flist}" class="list-group-item">
+                                <div th:if="${fvo.fileType > 0}" class="ms-2 me-auto">
+                                    <img th:src="@{|/upload/${fvo.saveDir}/${fvo.uuid}_th_${fvo.fileName}|}">
+                                </div>
+                                <div th:unless="${fvo.fileType > 0}" class="ms-2 me-auto">
+                                    <!-- 파일모양 아이콘 -->
+                                </div>
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">[[${fvo.fileName}]]</div>
+                                    [[${fvo.regAt}]]
+                                </div>
+                                <span class="badge bg-dark rounded-pill">[[${fvo.fileSize}]]Bytes</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button type="button" id="listBtn" class="btn btn-outline-primary">List</button>
+                    <!--detail page 에서 modify 상태로 변경하기 위한 버튼-->
+                    <button type="button" id="modBtn"  class="btn btn-outline-warning">Modify</button>
+                    <button type="button" id="delBtn" class="btn btn-outline-danger">Remove</button>
+                </form>
+
             <form action="/board/remove" method="post" id="delForm" style="display:none">
                 <input type="hidden" name="bno" th:value="${bvo.bno}">
             </form>
+            </th:block>
         </div>
         <script th:src="@{/js/boardDetail.js}"></script>
     </th:block>
