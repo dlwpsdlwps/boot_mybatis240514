@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{layout::setFragment(~{this::content})}">
+    <th:block th:fragment="content">
+        <div class="container-md">
+            <h1>회원리스트</h1>
+            <div class="card-group">
+                <div th:each="list : ${list}" class="card" style="width: 18rem;">
+                    <img alt="..." src="/dist/image/강아지1.jpeg">
+                    <div class="card-header">email: [[${list.email }]]</div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Nickname: [[${list.nickName }]]</li>
+                        <li class="list-group-item">Regdate: [[${list.regAt }]]</li>
+                        <li class="list-group-item">Lastlogin: [[${list.lastLogin }]]</li>
+                        <li th:each="a : ${list.authList}" class="list-group-item">Auth: [[${a.auth }]]</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</th:block>

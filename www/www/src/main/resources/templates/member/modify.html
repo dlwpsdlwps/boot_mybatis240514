@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<th:block th:replace="~{layout::setFragment(~{this::content})}">
+    <th:block th:fragment="content">
+        <div class="container-md">
+            <h1>modify</h1>
+            <form action="/member/modify" method="post" sec:sec:authorize="isAuthenticated()" th:with="auth=${#authentication.getPrincipal()}">
+                <div class="mb-3">
+                    <label for="e" class="form-label">email</label>
+                    <input type="text" class="form-control" name="email" id="e" th:value="${auth.mvo.email }" placeholder="email..." readonly="readonly">
+                </div>
+                <div class="mb-3">
+                    <label for="p" class="form-label">password</label>
+                    <input type="text" class="form-control" name="pwd" id="p" placeholder="password...">
+                </div>
+                <div class="mb-3">
+                    <label for="n" class="form-label">nick_name</label>
+                    <input type="text" class="form-control" name="nickName" id="n" th:value="${auth.mvo.nickName }" placeholder="nickName...">
+                </div>
+                <div class="mb-3">
+                    <label for="r" class="form-label">reg_date</label>
+                    <input type="text" class="form-control" name="regDate" id="r" th:value="${auth.mvo.regAt }" placeholder="regDate..." readonly="readonly">
+                </div>
+                <div class="mb-3">
+                    <label for="l" class="form-label">last_login</label>
+                    <input type="text" class="form-control" name="lastLogin" id="l" th:value="${auth.mvo.lastLogin }" placeholder="lastLogin..." readonly="readonly">
+                </div>
+                <!--<div class="mb-3">
+                <label for="a" class="form-label">auth</label>
+                <input type="text" class="form-control" name="auth" value="${auth }" placeholder="lastLogin..." readonly="readonly">
+                </div>-->
+                <button type="submit" class="btn btn-primary">적용</button>
+                <!-- <a href="/member/delete"><button type="button" class="btn btn-danger">삭제</button></a> -->
+                <button type="button" id="delBtn" class="btn btn-danger">삭제</button>
+                <a href="/member/list"><button type="button" class="btn btn-primary">목록</button></a>
+            </form>
+        </div>
+        <script>
+            document.getElementById('delBtn').addEventListener('click',()=>{
+                let check = confirm('탈퇴?');
+                if(check){
+                    location.href = "/member/delete";
+                }
+            });
+        </script>
+    </th:block>
+</th:block>
