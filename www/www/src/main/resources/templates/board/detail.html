@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <th:block th:replace="~{layout::setFragment(~{this::content})}">
     <th:block th:fragment="content">
         <div class="container-sm">
@@ -56,12 +56,69 @@
                     <button type="button" id="modBtn"  class="btn btn-outline-warning">Modify</button>
                     <button type="button" id="delBtn" class="btn btn-outline-danger">Remove</button>
                 </form>
+                <form action="/board/remove" method="post" id="delForm" style="display:none">
+                    <input type="hidden" name="bno" th:value="${bvo.bno}">
+                </form>
 
-            <form action="/board/remove" method="post" id="delForm" style="display:none">
-                <input type="hidden" name="bno" th:value="${bvo.bno}">
-            </form>
+                <!-- Comment 라인 -->
+                <!-- 댓글 등록 라인 -->
+                <br>
+                <hr>
+                <th:block sec:sec:authorize="isAuthenticated()" th:with="auth=${#authentication.getPrincipal()}">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="cmtWriter">[[${auth.mvo.nickName}]]</span>
+                        <input type="text" id="cmtText" class="form-control" placeholder="Add Comment..." aria-label="Username" aria-describedby="basic-addon1">
+                        <button type="button" id="cmtAddBtn" class="btn btn-secondary">Post</button>
+                    </div>
+
+                    <!-- 댓글 출력 라인 -->
+                    <ul class="list-group list-group-flush" id="cmtListArea">
+                        <li class="list-group-item">
+                            <div class="input-group mb-3">
+                                <div class="fw-bold">Writer</div>
+                                content
+                            </div>
+                            <span class="badge rounded-pill text-bg-warning">regDate</span>
+                        </li>
+                    </ul>
+
+                    <!-- 댓글 더보기 버튼 -->
+                    <div>
+                        <button type="button" id="moreBtn" data-page="1" class="btn btn-dark" style="visibility:hidden"> More + </button>
+                    </div>
+
+                    <!-- 모달 -->
+                    <div class="modal" id="myModal" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modWriter">Writer</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="text" class="form-control" id="cmtTextMod">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" id="cmtModBtn">modify</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+                <!--bno 넘기기-->
+                <script th:inline="javascript">
+                    const bnoVal = [[${bvo.bno}]];
+                    console.log(bnoVal);
+                </script>
             </th:block>
         </div>
+        <!--스크립트 부-->
         <script th:src="@{/js/boardDetail.js}"></script>
+        <script th:src="@{/js/boardComment.js}"></script>
+        <script>
+            spreadCommentList(bnoVal);
+        </script>
+
     </th:block>
 </th:block>

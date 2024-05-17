@@ -58,7 +58,7 @@ public class FileHandler {
                 file.transferTo(storeFile);
                 if(isImageFile(storeFile)){
                     fvo.setFileType(1);
-                    File thumbnail = new File(folders, uuidStr+"_"+onlyFileName);
+                    File thumbnail = new File(folders, uuidStr+"_th_"+onlyFileName);
                     Thumbnails.of(storeFile).size(100, 100).toFile(thumbnail);
                 }
             }catch (Exception e){
